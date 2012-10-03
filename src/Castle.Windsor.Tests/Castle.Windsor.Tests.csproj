@@ -1113,7 +1113,6 @@
     <Compile Include="Facilities\TypedFactory\Factories\IFactoryWithParameters.cs" />
     <Compile Include="Facilities\TypedFactory\Factories\IGenericComponentsFactory.cs" />
     <Compile Include="Facilities\TypedFactory\Factories\IProtocolHandlerFactory.cs" />
-    <Compile Include="Facilities\TypedFactory\TypedFactoryObsoleteApiTestCase.cs" />
     <Compile Include="Facilities\TypedFactory\TypedFactoryFacilityTake2TestCase.cs" />
     <Compile Include="InterceptorSelectorTestCase.cs" />
     <Compile Include="OpenGenericsTestCase.cs" />

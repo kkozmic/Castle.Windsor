@@ -1,4 +1,4 @@
-// Copyright 2004-2011 Castle Project - http://www.castleproject.org/
+// Copyright 2004-2012 Castle Project - http://www.castleproject.org/
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 namespace Castle.Facilities.TypedFactory
 {
 	using System;
-	using System.ComponentModel;
 
 	using Castle.Core;
 	using Castle.Core.Configuration;
@@ -23,16 +22,13 @@ namespace Castle.Facilities.TypedFactory
 	using Castle.MicroKernel;
 	using Castle.MicroKernel.Facilities;
 	using Castle.MicroKernel.Proxy;
+	using Castle.MicroKernel.Registration;
 	using Castle.MicroKernel.Resolvers;
 	using Castle.MicroKernel.SubSystems.Conversion;
 	using Castle.MicroKernel.Util;
 
-	using Component = Castle.MicroKernel.Registration.Component;
-
 	/// <summary>
-	///   Provides automatically generated factories on top of interfaces or delegates that
-	///   you can use to pull components out of the container without ever referencing it 
-	///   explicitly.
+	/// Provides automatically generated factories on top of interfaces or delegates that you can use to pull components out of the container without ever referencing it explicitly.
 	/// </summary>
 	public class TypedFactoryFacility : AbstractFacility
 	{
@@ -46,24 +42,6 @@ namespace Castle.Facilities.TypedFactory
 
 		internal static readonly string DefaultInterfaceSelectorKey =
 			"Castle.TypedFactory.DefaultInterfaceFactoryComponentSelector";
-
-		[Obsolete("This method is obsolete. Use AsFactory() extension method on fluent registration API instead.")]
-		[EditorBrowsable(EditorBrowsableState.Never)]
-		public void AddTypedFactoryEntry(FactoryEntry entry)
-		{
-			var model = new ComponentModel(
-				new ComponentName(entry.Id, true),
-				new[] { entry.FactoryInterface },
-				typeof(Empty),
-				new Arguments { { "typed.fac.entry", entry } }) { LifestyleType = LifestyleType.Singleton };
-
-			model.Interceptors.Add(new InterceptorReference("typed.fac.interceptor"));
-
-			var proxyOptions = model.ObtainProxyOptions();
-			proxyOptions.OmitTarget = true;
-
-			((IKernelInternal)Kernel).AddCustomComponent(model);
-		}
 
 		protected virtual void AddFactories(IConfiguration facilityConfig, ITypeConverter converter)
 		{
@@ -114,19 +92,35 @@ namespace Castle.Facilities.TypedFactory
 			Kernel.Register(factory);
 		}
 
+		private void AddTypedFactoryEntry(FactoryEntry entry)
+		{
+			var model = new ComponentModel(
+				new ComponentName(entry.Id, true),
+				new[] { entry.FactoryInterface },
+				typeof(Empty),
+				new Arguments { { "typed.fac.entry", entry } }) { LifestyleType = LifestyleType.Singleton };
+
+			model.Interceptors.Add(new InterceptorReference("typed.fac.interceptor"));
+
+			var proxyOptions = model.ObtainProxyOptions();
+			proxyOptions.OmitTarget = true;
+
+			((IKernelInternal)Kernel).AddCustomComponent(model);
+		}
+
 		private void InitFacility()
 		{
 			Kernel.Register(Component.For<TypedFactoryInterceptor>()
-			                	.NamedAutomatically(InterceptorKey),
+				                .NamedAutomatically(InterceptorKey),
 			                Component.For<ILazyComponentLoader>()
-			                	.ImplementedBy<DelegateFactory>()
-			                	.NamedAutomatically(DelegateFactoryKey),
+				                .ImplementedBy<DelegateFactory>()
+				                .NamedAutomatically(DelegateFactoryKey),
 			                Component.For<ITypedFactoryComponentSelector>()
-			                	.ImplementedBy<DefaultTypedFactoryComponentSelector>()
-			                	.NamedAutomatically(DefaultInterfaceSelectorKey),
+				                .ImplementedBy<DefaultTypedFactoryComponentSelector>()
+				                .NamedAutomatically(DefaultInterfaceSelectorKey),
 			                Component.For<ITypedFactoryComponentSelector>()
-			                	.ImplementedBy<DefaultDelegateComponentSelector>()
-			                	.NamedAutomatically(DefaultDelegateSelectorKey));
+				                .ImplementedBy<DefaultDelegateComponentSelector>()
+				                .NamedAutomatically(DefaultDelegateSelectorKey));
 
 			Kernel.ComponentModelBuilder.AddContributor(new TypedFactoryCachingInspector());
 		}
@@ -143,9 +137,7 @@ namespace Castle.Facilities.TypedFactory
 		{
 			try
 			{
-#pragma warning disable 0618 //call to obsolete method
 				AddTypedFactoryEntry(new FactoryEntry(id, factoryType, creation, destruction));
-#pragma warning restore
 			}
 			catch (Exception)
 			{
