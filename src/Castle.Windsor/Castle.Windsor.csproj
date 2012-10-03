@@ -494,7 +494,6 @@
     <Compile Include="MicroKernel\IKernelEvents.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MicroKernel\IKernel_ObsoleteAPI.cs" />
     <Compile Include="MicroKernel\IKernel_Resolve.cs" />
     <Compile Include="Core\Interceptor\IOnBehalfAware.cs" />
     <Compile Include="Core\Internal\GraphNode.cs" />
@@ -949,7 +948,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Windsor\IContainerAccessor.cs" />
-    <Compile Include="Windsor\IWindsorContainer_ObsoleteAPI.cs" />
     <Compile Include="Windsor\Proxy\AbstractProxyFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -959,7 +957,6 @@
     <Compile Include="Windsor\WindsorContainer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Windsor\WindsorContainer_ObsoleteAPI.cs" />
     <Compile Include="Windsor\WindsorServiceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
